@@ -1,0 +1,71 @@
+---
+import Container from "../Container.astro";
+import Link from "../ui/link.astro";
+import Dropdown from "./MenuDropdown.astro";
+import { Astronav, MenuItems, MenuIcon } from "astro-navbar";
+import { LanguageSelector } from "astro-i18next/components";
+import { localizePath } from "astro-i18next";
+
+const {data} = Astro.props;
+console.log(data);
+---
+
+<Container>
+  <header class="flex flex-col lg:flex-row flex justify-between items-center my-5">
+    <Astronav>
+      
+      <div class="flex w-full lg:w-auto items-center justify-between">
+        <a href={localizePath("/")} class="-m-1.5 p-1.5">
+          <span class="sr-only">Your Company</span>
+          <img class="h-8 w-auto" src={data.logo.value.url} alt="">
+        </a>
+        <div class="block lg:hidden">
+          <MenuIcon class="w-4 h-4 text-gray-800" />
+        </div>
+      </div>
+      <MenuItems class="hidden w-full lg:w-auto mt-2 lg:flex lg:mt-0">
+        <ul class="flex flex-col lg:flex-row lg:gap-3">
+          { 
+            data.SubItems.map((item, index) => (
+                <>
+                {item.HasChildren && (
+                  <Dropdown
+                    title={item.NavItemName}
+                    children={item.SubItems}
+                    lastItem={index === item.SubItems.length - 1}
+                  />
+                )}
+
+               {!item.HasChildren && (
+                  <li>
+                    <a
+                      href={localizePath(item.NavItemSlug)}
+                      class="flex lg:px-3 py-2 text-gray-600 hover:text-gray-900">
+                      {item.NavItemName}
+                    </a>
+                  </li>
+               )}
+             </>
+            ))
+          }
+          <button id="theme-toggle" type="button" class="text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5">
+            <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+            <svg id="theme-toggle-light-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+        </button>
+        <LanguageSelector showFlag={false} class="my-select-class text-gray-600" />
+        </ul>
+        <div class="lg:hidden flex items-center mt-3 gap-4">
+          <Link href="#" style="muted" block size="md">Log in</Link>
+          <Link href="#" size="md" block>Sign up</Link>
+        </div>
+      </MenuItems>
+    </Astronav>
+    <div>
+      <div class="hidden lg:flex items-center gap-4">
+        <a href="#">Log in</a>
+        <Link href="#" size="md">Sign up</Link>
+
+      </div>
+    </div>
+  </header>
+</Container>

@@ -1,0 +1,22 @@
+---
+import HeroPost from "../../components/HeroPost.astro";
+import PostLayout from "../../layouts/PostLayout.astro";
+
+export async function getStaticPaths() {
+    let data = await fetch("http://localhost:50001/api/posts")
+    let posts = await data.json()
+    // console.log(posts.docs[0].slug);
+
+    return posts.docs.map((item, index) => ({
+            params: {slug: item.slug},
+            props: {title: item.title},
+    }));
+} 
+
+const {title} = Astro.props;
+console.log(title)
+---
+
+<PostLayout>
+    <HeroPost title={title} />
+</PostLayout>
